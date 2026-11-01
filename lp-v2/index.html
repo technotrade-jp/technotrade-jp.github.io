@@ -321,6 +321,28 @@
   .br-sp{display:inline;}
   .contact-card .sub a{text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:12px 4px;}
 
+  /* ===== お問い合わせフォーム（T114の受け口を共用） ===== */
+  .contact-card--form{grid-column:1/-1;text-align:left;}
+  .contact-card--form .label{text-align:center;}
+  .lp-form{display:grid;gap:20px;}
+  .lp-form label{display:block;font-size:var(--fs-micro);letter-spacing:.05em;color:#E9E2D3;margin-bottom:8px;}
+  .lp-form .required{margin-left:8px;color:var(--gold-on-dark);font-size:12px;}
+  .lp-form input,.lp-form textarea{
+    width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--base);
+    border:1px solid var(--line);border-radius:2px;padding:12px 14px;min-height:44px;
+  }
+  .lp-form textarea{resize:vertical;}
+  .lp-form input:focus-visible,.lp-form textarea:focus-visible{outline:3px solid var(--gold-on-dark);outline-offset:2px;}
+  .lp-form [aria-invalid="true"]{border-color:#FFB4A2;border-width:2px;}
+  .lp-form .field-error{display:none;margin:8px 0 0;font-size:var(--fs-micro);color:#FFB4A2;}
+  .lp-form .field-error.is-shown{display:block;}
+  .lp-form .honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .lp-form .form-submit{width:100%;justify-content:center;cursor:pointer;font-size:var(--fs-body);}
+  .lp-form .form-submit[disabled]{opacity:.5;cursor:default;}
+  .form-status{margin:0 0 20px;padding:12px 16px;border-left:3px solid var(--gold-on-dark);background:rgba(255,255,255,.08);color:#fff;font-size:var(--fs-micro);}
+  .form-status:empty{display:none;}
+  .form-status.is-error{border-left-color:#FFB4A2;}
+
   /* ===== フッター ===== */
   footer{padding:48px 0 40px;border-top:1px solid var(--line);}
   .footer-inner{
@@ -401,7 +423,7 @@
     .reasons-head{position:sticky;top:calc(var(--header-h) + 40px);}
     .reasons .reason-list{margin-top:0;}
 
-    .contact-cards{grid-template-columns:repeat(2,1fr);}
+    .contact-cards{grid-template-columns:1fr;}
 
     /* 左＝言葉、右＝その言葉を figure にした結節図、下＝事実の帯。
        視線は 見出し → 結節点 → CTA → 事実 の順に落ちる */
@@ -815,10 +837,41 @@
       <h2 class="serif">まずは、<br>お気軽にご相談ください。</h2>
       <p class="lede">受入れの検討段階からで構いません。<br>企業様の状況に合わせて、<br class="br-sp">無理のない形をご提案します。</p>
       <div class="contact-cards">
-        <div class="contact-card">
-          <div class="label">メールでのお問い合わせ</div>
-          <a class="btn btn-primary-on-dark" href="mailto:jinzai@t-trade.jp?subject=%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B&body=%E4%BC%9A%E7%A4%BE%E5%90%8D%EF%BC%9A%0A%E3%81%94%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%E3%81%8A%E5%90%8D%E5%89%8D%EF%BC%9A%0A%E6%A5%AD%E7%A8%AE%EF%BC%9A%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E4%BA%BA%E6%95%B0%EF%BC%9A%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E6%99%82%E6%9C%9F%EF%BC%9A%0A%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%EF%BC%9A%0A">メールで相談する</a>
-          <div class="sub">メールソフトが開かない場合は<br><a href="mailto:jinzai@t-trade.jp">jinzai@t-trade.jp</a> 宛にご連絡ください</div>
+        <div class="contact-card contact-card--form">
+          <div class="label">フォームでのお問い合わせ</div>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <form class="lp-form" id="contact-form" novalidate>
+        <div>
+          <label for="company">会社名<span class="required">必須</span></label>
+          <input type="text" id="company" name="company" autocomplete="organization" required aria-required="true" aria-describedby="company-error">
+          <p class="field-error" id="company-error">会社名をご記入ください。</p>
+        </div>
+        <div>
+          <label for="name">ご担当者名<span class="required">必須</span></label>
+          <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" aria-describedby="name-error">
+          <p class="field-error" id="name-error">ご担当者名をご記入ください。</p>
+        </div>
+        <div>
+          <label for="email">メールアドレス<span class="required">必須</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="email-error">
+          <p class="field-error" id="email-error">メールアドレスを正しい形式でご記入ください。</p>
+        </div>
+        <div>
+          <label for="tel">電話番号</label>
+          <input type="tel" id="tel" name="tel" autocomplete="tel">
+        </div>
+        <div>
+          <label for="message">ご相談内容（業種・ご希望人数・ご希望時期など）<span class="required">必須</span></label>
+          <textarea id="message" name="message" rows="5" required aria-required="true" aria-describedby="message-error"></textarea>
+          <p class="field-error" id="message-error">ご相談内容をご記入ください。</p>
+        </div>
+        <div class="honeypot" aria-hidden="true">
+          <label for="website">この欄は入力しないでください</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary-on-dark form-submit">この内容で送信する</button>
+          </form>
+          <div class="sub">フォームがご利用になれない場合は<br><a href="mailto:jinzai@t-trade.jp">jinzai@t-trade.jp</a> 宛にご連絡ください</div>
         </div>
         <div class="contact-card">
           <div class="label">お電話でのお問い合わせ</div>
@@ -872,5 +925,107 @@
 })();
 </script>
 
+<script>
+(function () {
+  "use strict";
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbwjJ-zgMMOp4nB84EgWdq9w4rQSFBi-VEnNSIY1BLrVfnqAnXL1zh0It60Li1Rs-Y081w/exec";
+  var form = document.getElementById("contact-form");
+  var status = document.getElementById("form-status");
+  if (!form || !status) { return; }
+
+  var REQUIRED = ["company", "name", "email", "message"];
+  var ALL = ["company", "name", "email", "tel", "message"];
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function field(id) { return document.getElementById(id); }
+
+  function setError(id, show) {
+    var input = field(id);
+    var error = field(id + "-error");
+    if (!input || !error) { return; }
+    if (show) {
+      input.setAttribute("aria-invalid", "true");
+      error.classList.add("is-shown");
+    } else {
+      input.removeAttribute("aria-invalid");
+      error.classList.remove("is-shown");
+    }
+  }
+
+  function firstInvalid() {
+    var found = null;
+    REQUIRED.forEach(function (id) {
+      var input = field(id);
+      if (!input) { return; }
+      var value = input.value.trim();
+      var invalid = value === "";
+      if (!invalid && id === "email") { invalid = !EMAIL.test(value); }
+      setError(id, invalid);
+      if (invalid && !found) { found = input; }
+    });
+    return found;
+  }
+
+  function say(message, isError) {
+    status.textContent = message;
+    if (isError) {
+      status.classList.add("is-error");
+    } else {
+      status.classList.remove("is-error");
+    }
+  }
+
+  REQUIRED.forEach(function (id) {
+    var input = field(id);
+    if (input) {
+      input.addEventListener("input", function () { setError(id, false); });
+    }
+  });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (!ENDPOINT) {
+      say("ただいまフォームからの送信を受け付けられません。お手数ですが、下記のお電話にてご連絡ください。", true);
+      return;
+    }
+
+    var invalid = firstInvalid();
+    if (invalid) {
+      say("ご記入いただいていない項目、または形式に誤りのある項目があります。ご確認ください。", true);
+      invalid.focus();
+      return;
+    }
+
+    var button = form.querySelector(".form-submit");
+    var payload = { page: location.href };
+    ALL.forEach(function (id) {
+      var input = field(id);
+      payload[id] = input ? input.value.trim() : "";
+    });
+    var trap = field("website");
+    payload.website = trap ? trap.value.trim() : "";
+
+    button.disabled = true;
+    say("送信しています。そのままお待ちください。", false);
+
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (!data || data.status !== "ok") { throw new Error(data && data.message); }
+      form.reset();
+      button.disabled = false;
+      say("お問い合わせを受け付けました。担当者より折り返しご連絡いたします。", false);
+    }).catch(function () {
+      button.disabled = false;
+      say("送信できませんでした。お手数ですが、時間をおいて再度お試しいただくか、下記のお電話にてご連絡ください。", true);
+    });
+  });
+})();
+</script>
 </body>
 </html>
